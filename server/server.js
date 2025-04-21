@@ -7,8 +7,9 @@ const app = express();
 const port = 3000;
 
 // VAPID keys (generate once and keep them safe)
-const publicVapidKey = "YOURPUBLICVAPIDKEY";
-const privateVapidKey = "YOURPRIVATEVAPIDKEY";
+const publicVapidKey =
+  "BGHwKtyoiyFqnh5yppXiwkdUplJsAMGYoB4ewH7zm-X_6eD5kCwf_08Ty6_ZtJ1gOHmhgDXBaJr94OV5B1gAJHk";
+const privateVapidKey = "is7R3Kdv7LVQGnHEqrr4zkieBx5NyxgGk0z2GMGJInY";
 
 // Configure web-push
 webpush.setVapidDetails(
