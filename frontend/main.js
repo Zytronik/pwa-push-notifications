@@ -64,36 +64,21 @@ document.getElementById("subscribeButton").addEventListener("click", () => {
 
 // Add event listener for testing push notification
 document.getElementById("sendPush").addEventListener("click", () => {
+  const message = document.getElementById("pushMessage").value;
+  if (!message) {
+    alert("Message is required to send a push notification");
+    return;
+  }
   fetch("https://pwa-push-notifications-rosy.vercel.app/notify", {
     method: "POST",
+    body: JSON.stringify({ message: message }),
+    headers: {
+      "Content-Type": "application/json",
+    },
   })
     .then((res) => res.json())
     .then((data) => console.log("Push sent:", data))
     .catch((err) => console.error("Push send error:", err));
 });
 
-// Function to fetch and display all subscriptions
-function displaySubscriptions() {
-  fetch("https://pwa-push-notifications-rosy.vercel.app/subscriptions")
-    .then((res) => res.json())
-    .then((subscriptions) => {
-      const subscriptionsList = document.getElementById("subscriptionsList");
-      subscriptionsList.innerHTML = ""; // Clear previous list
-
-      if (subscriptions.length === 0) {
-        subscriptionsList.innerHTML = "<p>No subscriptions yet.</p>";
-      } else {
-        subscriptions.forEach((sub, index) => {
-          const subElement = document.createElement("pre");
-          subElement.textContent = JSON.stringify(sub, null, 2);
-          subscriptionsList.appendChild(subElement);
-        });
-      }
-    })
-    .catch((err) => console.error("Failed to load subscriptions:", err));
-}
-
-// Call the function to display subscriptions on page load
-window.onload = () => {
-  displaySubscriptions();
-};
+window.onload = () => {};

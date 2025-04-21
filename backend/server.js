@@ -45,22 +45,16 @@ app.post("/subscribe", (req, res) => {
   );
   if (!alreadySubscribed) {
     subscriptions.push(subscription);
-    console.log("Subscription added:", subscription);
   }
 
   res.status(201).json({ message: "Subscribed successfully" });
-});
-
-// 👉 Display all subscriptions (for the dashboard)
-app.get("/subscriptions", (req, res) => {
-  res.json(subscriptions);
 });
 
 // 👉 Send a push notification
 app.post("/notify", async (req, res) => {
   const payload = JSON.stringify({
     title: "📬 Nachricht!",
-    body: "Dies ist eine serverseitige Push-Nachricht.",
+    body: req.body.message || "Dies ist eine serverseitige Push-Nachricht.",
   });
 
   const results = await Promise.allSettled(
