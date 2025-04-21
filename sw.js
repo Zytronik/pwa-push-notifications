@@ -1,18 +1,20 @@
-self.addEventListener("install", (event) => {
-  console.log("Service Worker installiert.");
-  self.skipWaiting();
-});
-
-self.addEventListener("activate", (event) => {
-  console.log("Service Worker aktiviert.");
-});
-
 self.addEventListener("push", (event) => {
-  const data = event.data ? event.data.text() : "Push ohne Inhalt";
+  console.log("[Service Worker] Push Received.");
+
+  const data = event.data
+    ? event.data.json()
+    : { title: "No payload", body: "Empty message" };
+
+  const options = {
+    body: data.body || "Default body",
+    icon: "icon.png",
+    badge: "icon.png",
+  };
+
   event.waitUntil(
-    self.registration.showNotification("Push-Nachricht", {
-      body: data,
-      icon: "/icon.png",
-    })
+    self.registration.showNotification(
+      data.title || "Push Notification",
+      options
+    )
   );
 });

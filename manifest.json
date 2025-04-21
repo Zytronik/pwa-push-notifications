@@ -1,13 +1,13 @@
 {
   "name": "PWA Push Notifications",
   "short_name": "PWA Push",
-  "start_url": ".",
+  "start_url": "index.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "description": "A demo for PWA push notifications",
   "icons": [
     {
-      "src": "/icon.png",
+      "src": "icon.png",
       "sizes": "192x192",
       "type": "image/png"
     }

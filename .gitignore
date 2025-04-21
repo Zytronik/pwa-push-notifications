@@ -1,0 +1,40 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Logs
+logs
+*.log
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# dotenv environment files
+.env
+.env.*.local
+
+# Build output
+dist/
+build/
+public/build/
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Editor-specific
+.vscode/
+.idea/
+*.swp
+
+# Service Worker cache (if generated)
+workbox-*
+
+# Optional: Ignore PWA manifest icons if generated during build
+icon-*.png
+
+# Optional: ignore uploaded subscription data
+subscriptions.json
