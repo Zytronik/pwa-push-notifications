@@ -3,26 +3,28 @@ const bodyParser = require("body-parser");
 const webpush = require("web-push");
 const path = require("path");
 const cors = require("cors");
+require("dotenv").config();
 
 const app = express();
 const port = 3000;
 
-// VAPID keys (generate once and keep them safe)
-const publicVapidKey =
-  "BGHwKtyoiyFqnh5yppXiwkdUplJsAMGYoB4ewH7zm-X_6eD5kCwf_08Ty6_ZtJ1gOHmhgDXBaJr94OV5B1gAJHk";
-const privateVapidKey = "is7R3Kdv7LVQGnHEqrr4zkieBx5NyxgGk0z2GMGJInY";
+// VAPID keys
+const publicVapidKey = process.env.VAPID_PUBLIC_KEY;
+const privateVapidKey = process.env.VAPID_PRIVATE_KEY;
 
 // Configure web-push
 webpush.setVapidDetails(
-  "mailto:your-email@example.com",
+  `mailto:${process.env.VAPID_EMAIL}`,
   publicVapidKey,
   privateVapidKey
 );
 
 // Allow requests only from your frontend origin
+const allowedOrigin = process.env.CORS_ALLOWED_ORIGIN;
+
 app.use(
   cors({
-    origin: "https://omaroberholzer.com",
+    origin: allowedOrigin,
     methods: ["POST", "GET"],
     credentials: false,
   })
@@ -30,12 +32,12 @@ app.use(
 
 // Middleware
 app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname, "public"))); // Serve your PWA
+app.use(express.static(path.join(__dirname, "public")));
 
-// Store subscriptions in memory (in production use a database)
+// Store subscriptions in memory
 let subscriptions = [];
 
-// 👉 Receive subscription from client
+// Receive subscription from client
 app.post("/subscribe", (req, res) => {
   const subscription = req.body;
 
@@ -50,28 +52,25 @@ app.post("/subscribe", (req, res) => {
   res.status(201).json({ message: "Subscribed successfully" });
 });
 
-// 👉 Unsubscribe from push notifications
+// Unsubscribe from push notifications
 app.post("/unsubscribe", (req, res) => {
   const { endpoint } = req.body;
   const index = subscriptions.findIndex((sub) => sub.endpoint === endpoint);
 
   if (index !== -1) {
-    // Remove the subscription
     subscriptions.splice(index, 1);
-    console.log("Unsubscribed:", endpoint);
     res.status(200).json({ message: "Unsubscribed successfully" });
   } else {
-    console.log("Subscription not found:", endpoint);
     res.status(404).json({ message: "Subscription not found" });
   }
 });
 
-// 👉 Display all subscriptions (for the dashboard)
+// Display all subscriptions
 app.get("/subscriptions", (req, res) => {
   res.json(subscriptions);
 });
 
-// 👉 Send a push notification
+// Send a push notification
 app.post("/notify", async (req, res) => {
   const payload = JSON.stringify({
     title: "📬 Nachricht!",

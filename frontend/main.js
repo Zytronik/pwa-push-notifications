@@ -4,6 +4,7 @@ if ("serviceWorker" in navigator && "PushManager" in window) {
     .register("sw.js")
     .then((registration) => {
       console.log("Service Worker registered:", registration);
+      checkSubscriptionStatus(registration); // Check subscription status after registration
     })
     .catch((err) => {
       console.error("Service Worker registration failed:", err);
@@ -55,6 +56,46 @@ async function initPush() {
       "Content-Type": "application/json",
     },
   });
+
+  // After subscribing, check subscription status
+  checkSubscriptionStatus(registration);
+}
+
+// Function to unsubscribe from push notifications
+async function unsubscribePush() {
+  const registration = await navigator.serviceWorker.ready;
+  const subscription = await registration.pushManager.getSubscription();
+
+  if (subscription) {
+    await subscription.unsubscribe();
+    console.log("Unsubscribed from Push notifications");
+
+    await fetch("https://pwa-push-notifications-rosy.vercel.app/unsubscribe", {
+      method: "POST",
+      body: JSON.stringify({ endpoint: subscription.endpoint }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  }
+
+  // After unsubscribing, check subscription status
+  checkSubscriptionStatus(registration);
+}
+
+// Function to check subscription status and toggle button visibility
+async function checkSubscriptionStatus(registration) {
+  const subscription = await registration.pushManager.getSubscription();
+
+  if (subscription) {
+    // If subscribed, show Unsubscribe button and hide Subscribe button
+    document.getElementById("subscribeButton").style.display = "none";
+    document.getElementById("unsubscribeButton").style.display = "inline-block";
+  } else {
+    // If not subscribed, show Subscribe button and hide Unsubscribe button
+    document.getElementById("subscribeButton").style.display = "inline-block";
+    document.getElementById("unsubscribeButton").style.display = "none";
+  }
 }
 
 // Add event listener for button click to subscribe
@@ -81,12 +122,12 @@ document.getElementById("sendPush").addEventListener("click", () => {
     .catch((err) => console.error("Push send error:", err));
 });
 
-// Function to unsubscribe from push notifications
+// Add event listener for button click to unsubscribe
 document.getElementById("unsubscribeButton").addEventListener("click", () => {
   unsubscribePush().catch((err) => console.error(err));
 });
 
-// display subscriptions on the page
+// display subscriptions count on the page
 function displaySubscriptions() {
   fetch("https://pwa-push-notifications-rosy.vercel.app/subscriptions")
     .then((res) => res.json())
@@ -94,20 +135,17 @@ function displaySubscriptions() {
       const subscriptionsList = document.getElementById("subscriptionsList");
       subscriptionsList.innerHTML = ""; // Clear previous list
 
-      if (subscriptions.length === 0) {
+      const subscriptionCount = subscriptions.length;
+      if (subscriptionCount === 0) {
         subscriptionsList.innerHTML = "<p>No subscriptions yet.</p>";
       } else {
-        subscriptions.forEach((sub, index) => {
-          const subElement = document.createElement("pre");
-          subElement.textContent = JSON.stringify(sub, null, 2);
-          subscriptionsList.appendChild(subElement);
-        });
+        subscriptionsList.innerHTML = `<p>Total Subscriptions: ${subscriptionCount}</p>`;
       }
     })
     .catch((err) => console.error("Failed to load subscriptions:", err));
 }
 
-// Call the function to display subscriptions on page load
+// Call the function to display subscriptions count on page load
 window.onload = function () {
   displaySubscriptions();
 };
