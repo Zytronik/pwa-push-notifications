@@ -39,7 +39,7 @@ async function initPush() {
 
   console.log("Push Subscription:", JSON.stringify(subscription));
 
-  await fetch("/subscribe", {
+  await fetch("https://pwa-push-notifications-five.vercel.app/subscribe", {
     method: "POST",
     body: JSON.stringify(subscription),
     headers: {
