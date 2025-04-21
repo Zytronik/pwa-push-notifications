@@ -1,4 +1,4 @@
-const publicVapidKey = "<YOUR_PUBLIC_VAPID_KEY>"; // Replace with your VAPID public key
+const publicVapidKey = "YOUR_PUBLIC_VAPID_KEY"; // Replace with your VAPID public key
 
 async function urlBase64ToUint8Array(base64String) {
   const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
@@ -38,14 +38,13 @@ async function initPush() {
 
   console.log("Push Subscription:", JSON.stringify(subscription));
 
-  // ⚠️ Send subscription to your backend to store it for later pushes
-  // await fetch("/subscribe", {
-  //   method: "POST",
-  //   body: JSON.stringify(subscription),
-  //   headers: {
-  //     "Content-Type": "application/json"
-  //   }
-  // });
+  await fetch("/subscribe", {
+    method: "POST",
+    body: JSON.stringify(subscription),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 }
 
 document.getElementById("subscribeButton").addEventListener("click", () => {
