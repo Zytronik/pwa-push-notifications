@@ -33,7 +33,7 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "public"))); // Serve your PWA
 
 // Store subscriptions in memory (in production use a database)
-const subscriptions = [];
+let subscriptions = [];
 
 // 👉 Receive subscription from client
 app.post("/subscribe", (req, res) => {
@@ -51,7 +51,12 @@ app.post("/subscribe", (req, res) => {
   res.status(201).json({ message: "Subscribed successfully" });
 });
 
-// 👉 Send a push notification (e.g., via curl or Postman)
+// 👉 Display all subscriptions (for the dashboard)
+app.get("/subscriptions", (req, res) => {
+  res.json(subscriptions);
+});
+
+// 👉 Send a push notification
 app.post("/notify", async (req, res) => {
   const payload = JSON.stringify({
     title: "📬 Nachricht!",
@@ -67,10 +72,6 @@ app.post("/notify", async (req, res) => {
   );
 
   res.json({ message: "Push sent", results });
-});
-
-app.get("/", (req, res) => {
-  res.send("Hello World!");
 });
 
 app.listen(port, () => {

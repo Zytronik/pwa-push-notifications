@@ -1,14 +1,14 @@
 self.addEventListener("push", (event) => {
-  console.log("[Service Worker] Push Received.");
+  console.log("[Service Worker] Push Received.", event);
 
-  const data = event.data
-    ? event.data.json()
-    : { title: "No payload", body: "Empty message" };
+  const data = event.data.json();
+
+  console.log("[Service Worker] Push data received:", data);
 
   const options = {
-    body: data.body || "Default body",
+    body: data.body,
     icon: "icon.png",
-    badge: "icon.png",
+    vibrate: [100, 50, 100],
   };
 
   event.waitUntil(
