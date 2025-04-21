@@ -9,6 +9,9 @@ if ("serviceWorker" in navigator && "PushManager" in window) {
     .catch((err) => {
       console.error("Service Worker registration failed:", err);
     });
+} else {
+  document.getElementById("sendNotification").innerHTML =
+    "<p>Push notifications are not supported in this browser.</p>";
 }
 
 // Function to convert the base64 public key into a uint8 array
