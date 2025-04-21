@@ -59,7 +59,10 @@ app.post("/notify", async (req, res) => {
   res.json({ message: "Push sent", results });
 });
 
-// Start server
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
+
 app.listen(port, () => {
-  console.log(`Server started on http://localhost:${port}`);
+  console.log(`Server started on port ${port}`);
 });
