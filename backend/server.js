@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const webpush = require("web-push");
 const path = require("path");
+const cors = require("cors");
 
 const app = express();
 const port = 3000;
@@ -16,6 +17,15 @@ webpush.setVapidDetails(
   "mailto:your-email@example.com",
   publicVapidKey,
   privateVapidKey
+);
+
+// Allow requests only from your frontend origin
+app.use(
+  cors({
+    origin: "https://omaroberholzer.com",
+    methods: ["POST", "GET"],
+    credentials: false,
+  })
 );
 
 // Middleware
