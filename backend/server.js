@@ -73,7 +73,7 @@ app.get("/subscriptions", (req, res) => {
 // Send a push notification
 app.post("/notify", async (req, res) => {
   const payload = JSON.stringify({
-    title: "📬 Nachricht!",
+    title: "Notification Gang",
     body: req.body.message || "Dies ist eine serverseitige Push-Nachricht.",
   });
 
