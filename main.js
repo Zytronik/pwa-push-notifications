@@ -1,4 +1,4 @@
-const publicVapidKey = "YOUR_PUBLIC_VAPID_KEY"; // Replace with your VAPID public key
+const publicVapidKey = "YOURPUBLICVAPIDKEY"; // Replace with your VAPID public key
 
 async function urlBase64ToUint8Array(base64String) {
   const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
