@@ -50,6 +50,27 @@ app.post("/subscribe", (req, res) => {
   res.status(201).json({ message: "Subscribed successfully" });
 });
 
+// 👉 Unsubscribe from push notifications
+app.post("/unsubscribe", (req, res) => {
+  const { endpoint } = req.body;
+  const index = subscriptions.findIndex((sub) => sub.endpoint === endpoint);
+
+  if (index !== -1) {
+    // Remove the subscription
+    subscriptions.splice(index, 1);
+    console.log("Unsubscribed:", endpoint);
+    res.status(200).json({ message: "Unsubscribed successfully" });
+  } else {
+    console.log("Subscription not found:", endpoint);
+    res.status(404).json({ message: "Subscription not found" });
+  }
+});
+
+// 👉 Display all subscriptions (for the dashboard)
+app.get("/subscriptions", (req, res) => {
+  res.json(subscriptions);
+});
+
 // 👉 Send a push notification
 app.post("/notify", async (req, res) => {
   const payload = JSON.stringify({

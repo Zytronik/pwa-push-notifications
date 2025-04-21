@@ -3,12 +3,19 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Simple PWA</title>
+    <title>PWA Push Demo</title>
     <link rel="manifest" href="manifest.json" />
   </head>
   <body>
-    <h1>Meine PWA</h1>
+    <h1>PWA Push Demo</h1>
+
+    <h2>Subscriptions</h2>
+    <p id="status">Status: Not subscribed</p>
+    <div id="subscriptionsList"></div>
     <button id="subscribeButton">Subscribe to Push</button>
+    <button id="unsubscribeButton">Unsubscribe from Push</button>
+
+    <h2>Send Push Notification</h2>
     <input type="text" id="pushMessage" placeholder="Enter your message" />
     <button id="sendPush">Test Push senden</button>
 

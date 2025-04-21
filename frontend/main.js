@@ -81,4 +81,33 @@ document.getElementById("sendPush").addEventListener("click", () => {
     .catch((err) => console.error("Push send error:", err));
 });
 
-window.onload = () => {};
+// Function to unsubscribe from push notifications
+document.getElementById("unsubscribeButton").addEventListener("click", () => {
+  unsubscribePush().catch((err) => console.error(err));
+});
+
+// display subscriptions on the page
+function displaySubscriptions() {
+  fetch("https://pwa-push-notifications-rosy.vercel.app/subscriptions")
+    .then((res) => res.json())
+    .then((subscriptions) => {
+      const subscriptionsList = document.getElementById("subscriptionsList");
+      subscriptionsList.innerHTML = ""; // Clear previous list
+
+      if (subscriptions.length === 0) {
+        subscriptionsList.innerHTML = "<p>No subscriptions yet.</p>";
+      } else {
+        subscriptions.forEach((sub, index) => {
+          const subElement = document.createElement("pre");
+          subElement.textContent = JSON.stringify(sub, null, 2);
+          subscriptionsList.appendChild(subElement);
+        });
+      }
+    })
+    .catch((err) => console.error("Failed to load subscriptions:", err));
+}
+
+// Call the function to display subscriptions on page load
+window.onload = function () {
+  displaySubscriptions();
+};
